@@ -33,7 +33,7 @@ const Alert = styled.div`
 text-align: center;
 `;
 
-const Lane = ({ tickets, loading,error,title }) => (
+const Lane = ({ tickets, loading, error, title }) => (
   <LaneWrapper>
     <Title>{title}</Title>
     {(loading || error) && <Alert>{loading ? 'Loading...' :

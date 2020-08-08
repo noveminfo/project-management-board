@@ -22,7 +22,7 @@ export default function withDataFetching(WrappedComponent) {
             loading: false,
           });
         }
-      } catch(error) {
+      } catch (error) {
         this.setState({
           loading: false,
           error: error.message,
@@ -31,7 +31,7 @@ export default function withDataFetching(WrappedComponent) {
     }
 
     render() {
-      const {data,loading,error} = this.state;
+      const { data, loading, error } = this.state;
 
       return (
         <WrappedComponent
