@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import withDataFetching from '../withDataFetching';
+// import withDataFetching from '../withDataFetching';
 import Lane from '../components/Lane/Lane';
+import useDataFetching from '../withDataFetching2';
 
 const BoardWrapper = styled.div`
   display: flex;
@@ -15,18 +16,49 @@ const BoardWrapper = styled.div`
   }
 `;
 
-const Board = ({ lanes, loading, error, data }) => (
-  <BoardWrapper>
-    {lanes.map(lane =>
-      <Lane
-        key={lane.id}
-        title={lane.title}
-        loading={loading}
-        error={error}
-        tickets={data.filter(ticket => ticket.lane === lane.id)}
-      />
-    )}
-  </BoardWrapper>
-);
+// const Board = ({lanes, data, loading, error}) => {
+const Board = ({lanes, dataSource}) => {
+  const [tickets, loading, error, setTickets] = useDataFetching(dataSource);
+  
+  const onDragStart = (e, id) => {
+    e.dataTransfer.setData('id', id);
+  }
 
-export default withDataFetching(Board);
+  const onDragOver = e => {
+    e.preventDefault();
+  }
+
+  const onDrop = (e, laneId) => {
+    const id = Number(e.dataTransfer.getData('id'));
+
+    const new_tickets = tickets.filter(ticket => {
+      if (ticket.id === id) {
+        ticket.lane = laneId;
+      }
+      return ticket;
+    });
+
+    setTickets(new_tickets)
+  }
+
+  return (
+    <BoardWrapper>
+      {lanes.map(lane =>
+        <Lane
+          key={lane.id}
+          laneId={lane.id}
+          title={lane.title}
+          loading={loading}
+          error={error}
+          onDragStart={onDragStart}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          tickets={tickets.filter(ticket => ticket.lane === lane.id)}
+        />
+      )}
+    </BoardWrapper>
+  )
+}
+
+// export default withDataFetching(Board);
+export default Board;

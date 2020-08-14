@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import withDataFetching from '../withDataFetching';
+// import withDataFetching from '../withDataFetching';
 import Ticket from '../components/Ticket/Ticket';
+import useDataFetching from '../withDataFetching2';
 
 const TicketsWrapper = styled.div`
 display: flex;
@@ -19,11 +20,14 @@ const Alert = styled.div`
 text-align: center;
 `;
 
-const Tickets = ({ loading, data, error }) => (
+const Tickets = ({ dataSource }) => {
+  const [data, loading, error] = useDataFetching(dataSource);
+  return (
   <TicketsWrapper>
     {(loading || error) && <Alert>{loading ? 'Loading...' : error}</Alert>}
     {data.map(ticket => <Ticket key={ticket.id} marginRight ticket={ticket} />)}
   </TicketsWrapper>
-);
+  )
+};
 
-export default withDataFetching(Tickets);
+export default Tickets;
